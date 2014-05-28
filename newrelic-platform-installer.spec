@@ -52,7 +52,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-/opt/newrelic-plugins
+%{app_dir}
 %doc
 
 
@@ -62,7 +62,7 @@ rm -rf %{buildroot}
 echo "Successfully setup the New Relic Platform Installer!"
 echo
 echo "Next steps: "
-echo "  - Navigate to the directory: '$PREFIX'"
+echo "  - Navigate to the directory: '${app_dir}'"
 echo "  - Run './npi set license_key (paste license key)' to set newrelic license key"
 echo "  - Run './npi available' to get a list of available plugins"
 echo "  - Run './npi install <plugin>' to download, configure and start a plugin"
