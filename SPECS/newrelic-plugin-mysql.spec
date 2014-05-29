@@ -7,7 +7,7 @@
 
 Name:           newrelic-plugin-mysql
 Version:        2.0.0
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        New Relic MySQL Monitoring Plugin
 
 Group:          Applications/Internet
@@ -16,6 +16,8 @@ URL:            https://docs.newrelic.com/docs/plugins/installing-an-npi-compati
 
 
 Source0:        https://github.com/newrelic-platform/newrelic_mysql_java_plugin/raw/master/dist/newrelic_mysql_plugin-%{version}.tar.gz
+# I got this file from using the NPI installer and grabbing the manifest it created
+Source1:        com.newrelic.plugins.mysql.instance
 
 BuildArch:      noarch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXXX)
@@ -30,17 +32,20 @@ New Relic MySQL Monitoring Plugin
 
 
 %prep
-%setup -qn newrelic_mysql_plugin-%{version}
-
+%setup -T -c
+cp -p %SOURCE0 .
+cp -p %SOURCE1 .
 
 %build
 exit 0
 
 
 %install
-mkdir -p %{buildroot}/%{app_dir}
-cd ..
-tar cf - newrelic_mysql_plugin-%{version} | tar xf - -C %{buildroot}/%{app_dir}
+rm -rf %{buildroot}
+INSTALL_DIR=%{buildroot}/%{app_dir}
+mkdir -p $INSTALL_DIR
+%{__tar} -xf %SOURCE0  -C $INSTALL_DIR
+%{__install} com.newrelic.plugins.mysql.instance $INSTALL_DIR/.manifest
 
 
 %clean
@@ -62,3 +67,9 @@ echo "  - Run './npi prepare nrmysql' to configure the module"
 echo "  - For additional help run the following './npi --help'"
 
 %changelog
+* Wed May 28 2014 Tommy McNeely <tmcneely@deliveryagent.com> - 2.0.0-3
+- Updated the .manifest file, as the source was wrong
+
+* Wed May 28 2014 Tommy McNeely <tmcneely@deliveryagent.com> - 2.0.0-2
+- Added .manifest file to satisfy the NPI
+

@@ -9,7 +9,7 @@
 
 Name:           newrelic-platform-installer
 Version:        0.1.4
-Release:        1%{?dist}
+Release:        3%{?dist}
 Summary:        New Relic Platform Installer is a command line utility for easily downloading, configuring and running plugins
 
 Group:          Applications/Internet
@@ -18,6 +18,7 @@ URL:            https://docs.newrelic.com/docs/plugins/installing-an-npi-compati
 
 
 Source0:        https://download.newrelic.com/npi/v%{version}/platform_installer-%{app_platform}-%{app_arch}-v%{version}.tar.gz
+Patch0:         newrelic-npi-proxy.patch
 
 BuildArch:      noarch
 BuildRoot:      %(mktemp -ud %{_tmppath}/%{name}-%{version}-%{release}-XXXXXXX)
@@ -33,7 +34,7 @@ New Relic Platform Installer is a command line utility for easily downloading, c
 
 %prep
 %setup -qn platform_installer_%{app_platform}_%{app_arch}
-
+%patch0
 
 %build
 echo "Replace arch specific node binary with a symlink to system node"
@@ -42,6 +43,7 @@ ln -s /usr/bin/node bin/node
 
 
 %install
+rm -rf %{buildroot}
 mkdir -p %{buildroot}/%{app_dir}
 tar cf - ./ | tar xf - -C %{buildroot}/%{app_dir}
 
@@ -69,3 +71,6 @@ echo "  - Run './npi install <plugin>' to download, configure and start a plugin
 echo "  - For additional help run the following './npi --help'"
 
 %changelog
+* Wed May 28 2014 Tommy McNeely <tmcneely@deliveryagent.com> - 0.1.4-3
+- Added a fix for working with proxies - https://discuss.newrelic.com/t/proxy-settings-do-not-appear-to-be-working/1873/7
+

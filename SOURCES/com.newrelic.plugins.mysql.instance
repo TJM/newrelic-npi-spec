@@ -1,0 +1,9 @@
+{
+  "download_url": "https://github.com/newrelic-platform/newrelic_mysql_java_plugin/raw/master/dist/newrelic_mysql_plugin-2.0.0.tar.gz",
+  "guid": "com.newrelic.plugins.mysql.instance",
+  "implementation": "Java",
+  "installer_compatible": true,
+  "publisher_name": "New Relic Inc.",
+  "publisher_support_url": "https://support.newrelic.com/home",
+  "version": "2.0.0"
+}

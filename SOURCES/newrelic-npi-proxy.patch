@@ -1,0 +1,24 @@
+diff -Naur lib.orig/platform_helpers.js lib/platform_helpers.js
+--- lib.orig/platform_helpers.js	2014-05-28 11:47:18.482189056 -0600
++++ lib/platform_helpers.js	2014-05-28 11:40:23.771548982 -0600
+@@ -67,6 +67,9 @@
+   var proxyPass = configManager.resolveConfig('proxy_password');
+ 
+   if (proxyHost) {
++    if (proxyHost.lastIndexOf('http://', 0) != 0) {
++      proxyHost = 'http://' + proxyHost;
++    }
+     if (!proxyPort) {
+       log.warn("You have set a 'proxy_host', but not a 'proxy_port', ignoring proxy settings and continuing...");
+     } else {
+@@ -546,7 +549,9 @@
+ 
+   log.info("Downloading compressed archive for '" + plugin + "'...");
+ 
+-  var archiveRequest = request.get(manifestDetails.download_url).on('error', function onError(err) { return callback(err); }).pipe(compressedFile);
++  var options = getServiceRequestOptions('/bogus');
++  options.uri = manifestDetails.download_url;
++  var archiveRequest = request.get(options).on('error', function onError(err) { return callback(err); }).pipe(compressedFile);
+ 
+   archiveRequest.on('finish', function onFinish() {
+     log.info("Extracting archive for '" + plugin + "'...")
